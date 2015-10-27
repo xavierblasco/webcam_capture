@@ -49,13 +49,72 @@ int main(int argc, char *argv[])
             cv::waitKey();
         }
         
-        //show image in a window
+	
+	//print image dimensions
+	//std::cout << "image size is: " << image.rows << "x" << image.cols << std::endl; 
+	
+	//get central pixel
+	int row_central_px = image.rows * 0.5;
+	int col_central_px = image.cols * 0.5;
+
+	//get intensity for each chanel BGR 
+	int px_value_blue = image.at<cv::Vec3b>(row_central_px,col_central_px)[0] ;
+	int px_value_green = image.at<cv::Vec3b>(row_central_px,col_central_px)[1] ;
+	int px_value_red = image.at<cv::Vec3b>(row_central_px,col_central_px)[2] ;
+	
+	//print previous value for each channel BGR 
+	//std::cout << "px_value_blue is: " << px_value_blue << "px_value_green is: " << px_value_green << "px_value_red is: " << px_value_red <<std::endl; 
+	
+	//reset pixels values	
+	px_value_blue = 0;
+	px_value_green = 0;
+	px_value_red = 0;
+
+	//Set number of levels
+	int levels = 2;//Two levels of neighbours (8 pixels + current) **** You could change this variable to set diferent level of neighbours
+	
+	//number of pixels in this matrix
+	int number_pixels = pow ((1 + (2 * levels)), 2.0) ;
+
+	//find meddiums value for each channel BGR 
+	for(int i = (row_central_px -levels ); i <= (row_central_px +levels); i++){
+		for(int j = (col_central_px - levels); j <= (col_central_px + levels); j++)
+		{
+		    	px_value_blue += image.at<cv::Vec3b>(i, j)[0] ;
+			px_value_green += image.at<cv::Vec3b>(i, j)[1] ;
+			px_value_red += image.at<cv::Vec3b>(i, j)[2] ;
+		}
+	}
+	
+	//print previous value for each channel BGR 
+	std::cout << "px_value_blue is: " << px_value_blue << "px_value_green is: " << px_value_green << "px_value_red is: " << px_value_red <<std::endl;
+	
+	//print previous value for each channel BGR 
+	std::cout << "number_pixels is: " << number_pixels<<std::endl;  
+
+	//get middle value for each channel
+	int px_value_blue_new = px_value_blue / number_pixels;
+	int px_value_green_new = px_value_green / number_pixels;
+	int px_value_red_new = px_value_red / number_pixels;
+
+	//print previous value for each channel BGR 
+	std::cout << "px_value_blue_new is: " << px_value_blue_new << "px_value_green_new is: " << px_value_green_new << "px_value_red_new is: " << px_value_red_new <<std::endl; 
+	
+
+	//set mid intensity for each chanel BGR  
+	for(int i = (row_central_px -levels ); i <= (row_central_px +levels); i++){
+		for(int j = (col_central_px - levels); j <= (col_central_px + levels); j++)
+		{ 				
+			image.at<cv::Vec3b>(i, j)[0] = px_value_blue_new ;
+			image.at<cv::Vec3b>(i, j)[1] = px_value_green_new;
+			image.at<cv::Vec3b>(i, j)[2] = px_value_red_new;
+		}
+	}
+
+	//show image in a window
         cv::imshow("Output Window", image);
-		
-		//print image dimensions
-		std::cout << "image size is: " << image.rows << "x" << image.cols << std::endl; 
-		
-		//Waits 1 millisecond to check if a key has been pressed. If so, breaks the loop. Otherwise continues.
+
+	//Waits 1 millisecond to check if a key has been pressed. If so, breaks the loop. Otherwise continues.
         if(cv::waitKey(1) >= 0) break;
     }   
 }
