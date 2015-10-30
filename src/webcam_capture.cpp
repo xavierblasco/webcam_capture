@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 	px_value_red = 0;
 
 	//Set number of levels
-	int levels = 2;//Two levels of neighbours (8 pixels + current) **** You could change this variable to set diferent level of neighbours
+	int levels = 1;//Two levels of neighbours (8 pixels + current) **** You could change this variable to set diferent level of neighbours
 	
 	//number of pixels in this matrix
 	int number_pixels = pow ((1 + (2 * levels)), 2.0) ;
